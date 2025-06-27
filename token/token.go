@@ -22,8 +22,8 @@ const (
 	BANG     = "!"
 	ASTERISK = "*"
 	SLASH    = "/"
-	GT       = "/"
-	LT       = "/"
+	GT       = ">"
+	LT       = "<"
 
 	// delimiters
 	COMMA     = ","
