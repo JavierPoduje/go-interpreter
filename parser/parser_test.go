@@ -10,13 +10,13 @@ import (
 
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
-		input string
+		input              string
 		expectedIdentifier string
-		expectedValue any
+		expectedValue      any
 	}{
-		{ "let x = 5;", "x", 5 },
-		{ "let y = true;", "y", true },
-		{ "let foobar = y;", "foobar", "y" },
+		{"let x = 5;", "x", 5},
+		{"let y = true;", "y", true},
+		{"let foobar = y;", "foobar", "y"},
 	}
 
 	for _, tt := range tests {
@@ -26,7 +26,10 @@ func TestLetStatements(t *testing.T) {
 		checkParserErrors(t, p)
 
 		if len(program.Statements) != 1 {
-			t.Fatalf("program.Statements does nto contain 1 statements. got=%d", len(program.Statements))
+			t.Fatalf(
+				"program.Statements does nto contain 1 statements. got=%d",
+				len(program.Statements),
+			)
 		}
 
 		stmt := program.Statements[0]
@@ -830,5 +833,23 @@ func TestCallExpressionParameterParsing(t *testing.T) {
 					arg, exp.Arguments[i].String())
 			}
 		}
+	}
+}
+
+func TestStringLiteral(t *testing.T) {
+	input := `"hello world";`
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParseProgram()
+	checkParserErrors(t, p)
+
+	stmt := program.Statements[0].(*ast.ExpressionStatement)
+	literal, ok := stmt.Expression.(*ast.StringLiteral)
+	if !ok {
+		t.Fatalf("exp not *ast.StringLiteral. got=%T", stmt.Expression)
+	}
+
+	if literal.Value != "hello world" {
+		t.Errorf("literal.Value not %q. got=%q", "hello word", literal.Value)
 	}
 }
